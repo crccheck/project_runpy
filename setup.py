@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='project_runpy',
@@ -6,10 +6,11 @@ setup(
     author='Chris Chang',
     author_email='c@crccheck.com',
     url='https://github.com/crccheck/project_runpy',
-    packages=['heidi', 'tim', ],
+    packages=['project_runpy', ],
     license='Apache License, Version 2.0',
     description='Helper utilities for Python projects',
     long_description=open('README.rst').read(),
+    install_requires=['dj-settings-helpers>=1.0,<2'],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
