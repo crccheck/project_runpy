@@ -11,5 +11,6 @@
 
 # setup.py generated files
 *.egg-info
+build/*
 dist/*
 MANIFEST
