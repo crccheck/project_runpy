@@ -1,6 +1,5 @@
 """
-Helpers related to functionality.
-
+Tim: Helpers related to functionality.
 """
 import os
 
