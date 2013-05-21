@@ -1,0 +1,15 @@
+
+
+# Private user files
+.env
+
+
+# Generated files
+*.pyc
+.DS_Store
+
+
+# setup.py generated files
+*.egg-info
+dist/*
+MANIFEST
