@@ -1,16 +1,37 @@
 """
 Tim: Helpers related to functionality.
 """
+import inspect
 import os
 
 
 __all__ = ['create_project_dir', 'env', ]
 
 
-def create_project_dir(project_path):
+def create_project_dir(*project_paths):
+    """
+    Get a function you can use to turn relative paths into absolute paths.
+
+    Usage::
+
+        from project_runpy.tim import create_project_dir
+
+        _ = create_project_dir()
+        DATABASE = _('project.db')
+
+        _ = create_project_dir('..')
+        STATIC_ROOT = _('static_root')
+
+        _ = create_project_dir('..', '..')
+        LOCATION = _('FOO', 'BAR', '..', 'BAZ')
+
+    """
+    callee_file = inspect.getouterframes(inspect.currentframe())[1][1]
+    base = os.path.realpath(
+            os.path.join(os.path.dirname(callee_file), *project_paths))
+
     def project_dir(*paths):
-        base = os.path.realpath(os.path.dirname(project_path))
-        return os.path.join(base, *paths)
+        return os.path.realpath(os.path.join(base, *paths))
 
     return project_dir
 

@@ -2,7 +2,21 @@ from unittest import TestCase
 import os
 
 
-from project_runpy.tim import env
+from project_runpy.tim import create_project_dir, env
+
+
+class TestTimProjectDir(TestCase):
+    def test_can_build_guess(self):
+        project_dir_func = create_project_dir()
+        dir = os.path.dirname(__file__)
+        self.assertEqual(project_dir_func(), dir)
+        self.assertEqual(project_dir_func('.'), dir)
+        self.assertEqual(project_dir_func('..', 'project_runpy'), dir)
+
+    def test_can_set_start_path(self):
+        project_dir_func = create_project_dir('project_runpy')
+        dir = os.path.dirname(__file__)
+        self.assertEqual(project_dir_func('..'), dir)
 
 
 class TestTimEnv(TestCase):
