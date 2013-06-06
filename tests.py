@@ -12,6 +12,8 @@ class TestTimEnv(TestCase):
     def tearDown(self):
         if self.key in os.environ:
             os.environ.pop(self.key)
+        if 'ENVIRONMENT' in os.environ:
+            os.environ.pop('ENVIRONMENT')
 
     def set_val(self, value):
         """Shortcut for setting the environment variable."""
@@ -75,3 +77,17 @@ class TestTimEnv(TestCase):
         os.environ['ENVIRONMENT'] = 'DEV'
         result = env.get(self.key, 'qwerty', DEV='dvorak')
         self.assertEqual(result, 'dvorak')
+
+    def test_no_default_unless_in_environment(self):
+        result = env.get(self.key, DEV='dvorak')
+        self.assertEqual(result, '')
+        os.environ['ENVIRONMENT'] = 'DEV'
+        result = env.get(self.key, DEV='dvorak')
+        self.assertEqual(result, 'dvorak')
+
+    def test_no_default_unless_in_environment_and_bool(self):
+        result = env.get(self.key, DEV=False)
+        self.assertEqual(result, '')
+        os.environ['ENVIRONMENT'] = 'DEV'
+        result = env.get(self.key, DEV=False)
+        self.assertEqual(result, False)

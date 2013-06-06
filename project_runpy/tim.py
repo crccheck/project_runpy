@@ -42,7 +42,8 @@ class _Env(dict):
 
         """
         environment = os.environ.get('ENVIRONMENT')
-        value = os.environ.get(key, defaults.get(environment, default))
+        default = defaults.get(environment, default)
+        value = os.environ.get(key, default)
         if value is None and type_func is None:
             # return early to prevent returning 'None'
             return ''
