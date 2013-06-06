@@ -6,6 +6,11 @@ clean:
 	rm -rf dist
 	rm -rf *.egg-info
 
+build:
+	python setup.py sdist
+
+all: clean build
+
 
 test:
 	nosetests
