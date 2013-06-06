@@ -15,27 +15,20 @@ def create_project_dir(project_path):
     return project_dir
 
 
-def get_env(key, default, force_bool=False, type_func=None, **defaults):
-    env = os.environ.get('ENVIRONMENT')
-    a = os.environ.get(key, defaults.get(env, default))
-    if force_bool:
-        return str(a).lower() in ['1', 'yes', 'true', ]
-    return a if type_func is None else type_func(a)
-
-
 class _Env(dict):
     """A wrapper around os.environ that supports environments and `Boolean`."""
     def __init__(self):
         self.update(os.environ.copy())
 
-    def get(self, key, default=None, *args, **kwargs):
+    def get(self, key, default=None, type_func=None, **defaults):
         """
         Get information from your environment.
-
-        A wrapper around dj-settings-helper's ``get_env`` that mimics the api of
-        ``os.environ``.
         """
-        return get_env(key, default, *args, **kwargs)
+        env = os.environ.get('ENVIRONMENT')
+        a = os.environ.get(key, defaults.get(env, default))
+        if force_bool:
+            return str(a).lower() in ['1', 'yes', 'true', ]
+        return a if type_func is None else type_func(a)
 
 
 env = _Env()
