@@ -2,7 +2,7 @@ from unittest import TestCase
 import os
 
 
-from project_runpy.tim import create_project_dir, env
+from project_runpy import create_project_dir, env
 
 
 class TestTimProjectDir(TestCase):
