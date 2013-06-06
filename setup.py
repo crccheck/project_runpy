@@ -10,7 +10,6 @@ setup(
     license='Apache License, Version 2.0',
     description='Helper utilities for Python projects',
     long_description=open('README.rst').read(),
-    install_requires=['dj-settings-helpers>=1.0,<2'],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
