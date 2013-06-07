@@ -1,7 +1,7 @@
 project_runpy
 =============
 
-Generic helpers I wish existed or am constantly copying into my projects.
+Generic helpers I wish existed or am constantly copying into my Python projects.
 
 
 ``create_project_dir``
@@ -32,7 +32,7 @@ the function it returns to turn relative paths into absolute paths.
 
 Get information about your environment variables.
 
-You can use ``tim.env.get`` as a drop-in replacement for ``os.environ.get``::
+You can use ``env.get`` as a drop-in replacement for ``os.environ.get``::
 
     from project_runpy import env
 
@@ -60,9 +60,9 @@ Usage::
 
     import logging
 
-    from project_runpy.heidi import ColorizingStreamHandler
+    from project_runpy import ColorizingStreamHandler
 
-    logger = logging.getLogger('downloader')
+    logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(ColorizingStreamHandler())
 
