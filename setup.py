@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='project_runpy',
-    version='0.1.0',
+    version='0.1.1',
     author='Chris Chang',
     author_email='c@crccheck.com',
     url='https://github.com/crccheck/project_runpy',
