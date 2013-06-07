@@ -1,2 +1,2 @@
-from heidi import *
-from tim import *
+from .heidi import *
+from .tim import *
