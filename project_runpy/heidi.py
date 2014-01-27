@@ -3,7 +3,7 @@ Heidi: Helpers related to visuals.
 """
 import logging
 
-__all__ = ['ColorizingStreamHandler', ]
+__all__ = ['ColorizingStreamHandler', 'ReadableSqlFilter']
 
 
 #
@@ -82,3 +82,50 @@ class ColorizingStreamHandler(logging.StreamHandler):
             parts[0] = self.colorize(parts[0], record)
             message = '\n'.join(parts)
         return message
+
+
+###########
+# FILTERS #
+###########
+
+class ReadableSqlFilter(logging.Filter):
+    """
+    A filter for more readable sql by stripping out the SELECT ... columns.
+
+    Modeled after how debug toolbar displays SQL. This code should be optimized
+    for performance. For example, I don't check to make sure record.name is
+    'django.db.backends' because I assume you put this filter alongside it. I
+    also assume there is going to be a 'FROM' if there's a 'SELECT' and don't
+    catch the ValueError that would result from that.
+
+    Sample Usage in Django's `settings.py`:
+
+        LOGGING = {
+            ...
+            'filters': {
+                'readable_sql': {
+                    '()': 'project_runpy.ReadableSqlFilter',
+                },
+            },
+            'loggers': {
+                'django.db.backends': {
+                    'filters': ['readable_sql'],
+                    ...
+                },
+                ...
+            },
+        }
+    """
+
+    def filter(self, record):
+        if record.sql[:6] != 'SELECT':
+            return True
+
+        # unfortunately, record.msg has already been rendered so we have to
+        # modify .msg in-place instead of .sql
+        begin = record.msg.index('SELECT')
+        end = record.msg.index('FROM')
+        if end - begin > 100:
+            record.msg = u'{0} ... {1}'.format(
+                    record.msg[:begin + 6], record.msg[end:])
+        return True
