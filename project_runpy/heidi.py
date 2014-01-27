@@ -111,7 +111,8 @@ class ReadableSqlFilter(logging.Filter):
                 'django.db.backends': {
                     'filters': ['readable_sql'],
                     ...
-                }
+                },
+                ...
             },
         }
     """
