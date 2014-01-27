@@ -8,9 +8,10 @@ import os
 
 
 from project_runpy import (
+    ColorizingStreamHandler,
     create_project_dir,
     env,
-    ColorizingStreamHandler,
+    ImproperlyConfigured,
     ReadableSqlFilter,
 )
 
@@ -101,6 +102,7 @@ class TestTimEnv(TestCase):
         os.environ['ENVIRONMENT'] = 'DEV'
         result = env.get(self.key, 'qwerty', DEV='dvorak')
         self.assertEqual(result, 'dvorak')
+        del os.environ['ENVIRONMENT']  # teardown
 
     def test_no_default_unless_in_environment(self):
         result = env.get(self.key, DEV='dvorak')
@@ -108,6 +110,7 @@ class TestTimEnv(TestCase):
         os.environ['ENVIRONMENT'] = 'DEV'
         result = env.get(self.key, DEV='dvorak')
         self.assertEqual(result, 'dvorak')
+        del os.environ['ENVIRONMENT']  # teardown
 
     def test_no_default_unless_in_environment_and_bool(self):
         result = env.get(self.key, DEV=False)
@@ -115,6 +118,23 @@ class TestTimEnv(TestCase):
         os.environ['ENVIRONMENT'] = 'DEV'
         result = env.get(self.key, DEV=False)
         self.assertEqual(result, False)
+        del os.environ['ENVIRONMENT']  # teardown
+
+    def test_require_raises_exception(self):
+        with self.assertRaises(ImproperlyConfigured):
+            env.require('FOO')
+
+    def test_require_raises_exception_with_stupid_default(self):
+        with self.assertRaises(ImproperlyConfigured):
+            env.require('FOO', default='')
+
+        with self.assertRaises(ImproperlyConfigured):
+            env.require('FOO', default=u'')
+
+    def test_require_acts_like_get(self):
+        os.environ['FOO'] = 'BAR'
+        self.assertEqual(env.require('FOO'), 'BAR')
+        del os.environ['FOO']  # teardown
 
 
 class HeidiColorizingStreamHandler(TestCase):

@@ -32,6 +32,9 @@ the function it returns to turn relative paths into absolute paths.
 
 Get information about your environment variables.
 
+``.get(key, ...)``
+~~~~~~~~~~~~~~~~~~
+
 You can use ``env.get`` as a drop-in replacement for ``os.environ.get``::
 
     from project_runpy import env
@@ -49,6 +52,18 @@ matches the key::
 
     env.get('WORKERS', 10, DEV=1)  # if ENVIRONMENT == DEV: default = 1
     env.get('DEBUG', FALSE, type_func=bool, TEST=False)  # combine it
+
+``.require(key, ...)``
+~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to be extra strict/cautious, you can raise an exception if the
+environment variable was not set by using ``.require`` instead of ``.get``.
+
+Demo::
+
+    >>> from project_runpy import env
+    >>> env.require('SHIRTSNSHOES')
+    ImproperlyConfigured: Environment variable not found: SHIRTSNSHOES
 
 
 ``ColorizingStreamHandler``
