@@ -7,7 +7,12 @@ except ImportError:
 import os
 
 
-from project_runpy import create_project_dir, env, ColorizingStreamHandler
+from project_runpy import (
+    create_project_dir,
+    env,
+    ColorizingStreamHandler,
+    ReadableSqlFilter,
+)
 
 
 class TestTimProjectDir(TestCase):
@@ -117,3 +122,10 @@ class HeidiColorizingStreamHandler(TestCase):
         # assert can add handler without an exception getting raised
         logger = logging.getLogger('test')
         logger.addHandler(ColorizingStreamHandler())
+
+
+class HeidiReadableSqlFilter(TestCase):
+    def test_it_works(self):
+        # assert can add filter without an exception getting raised
+        logger = logging.getLogger('test')
+        logger.addFilter(ReadableSqlFilter())
