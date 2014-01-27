@@ -15,7 +15,10 @@ all: clean build
 
 
 test:
+	nosetests
+
+tox:
 	tox
 
 
-.PHONY: clean test
+.PHONY: clean build all test tox

@@ -86,6 +86,44 @@ Django::
 
     }
 
+``ReadableSqlFilter``
+---------------------
+
+A logging filter designed to make the ``django.db.backends`` console output more
+readable.
+
+Turns::
+
+    (0.002) SELECT "tx_elevators_building"."id", "tx_elevators_building"."elbi",
+    "tx_elevators_building"."name_1", "tx_elevators_building"."name_2",
+    "tx_elevators_building"."address_1", "tx_elevators_building"."address_2",
+    "tx_elevators_building"."city", "tx_elevators_building"."zip_code",
+    "tx_elevators_building"."county", "tx_elevators_building"."owner",
+    "tx_elevators_building"."contact", "tx_elevators_building"."latitude",
+    "tx_elevators_building"."longitude" FROM "tx_elevators_building" LIMIT 21;
+    args=()
+
+Into::
+
+    (0.002) SELECT ... FROM "tx_elevators_building" LIMIT 21; args=()
+
+To install, edit your Django settings::
+
+        LOGGING = {
+            ...
+            'filters': {
+                'readable_sql': {
+                    '()': 'project_runpy.ReadableSqlFilter',
+                },
+            },
+            'loggers': {
+                'django.db.backends': {
+                    'filters': ['readable_sql'],
+                    ...
+                },
+            },
+            ...
+        }
 
 About
 -----
