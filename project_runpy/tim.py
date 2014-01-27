@@ -5,7 +5,7 @@ import inspect
 import os
 
 
-__all__ = ['create_project_dir', 'env', ]
+__all__ = ['create_project_dir', 'ImproperlyConfigured', 'env', ]
 
 
 def create_project_dir(*project_paths):
@@ -34,6 +34,11 @@ def create_project_dir(*project_paths):
         return os.path.realpath(os.path.join(base, *paths))
 
     return project_dir
+
+
+class ImproperlyConfigured(Exception):
+    """ForgotPantsException"""
+    pass
 
 
 class _Env(dict):
@@ -76,5 +81,22 @@ class _Env(dict):
             type_func = self.parse_bool
         return type_func(value)
 
+    def require(self, key, default=None, *args, **kwargs):
+        """
+        Like ``.get()``, but raises an exception if there's nothing to return.
+
+        Use this for required environment variables that you can't provide a
+        default.
+
+        Example::
+
+            env.require('SECRET_KEY')
+        """
+        # yeah, I could check the inputs and do stuff, but I feel like wrapping.
+        result = self.get(key, default, *args, **kwargs)
+        if result == '':
+            raise ImproperlyConfigured(
+                    'Environment variable not found: {0}'.format(key))
+        return result
 
 env = _Env()
