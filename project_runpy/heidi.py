@@ -124,8 +124,11 @@ class ReadableSqlFilter(logging.Filter):
         # unfortunately, record.msg has already been rendered so we have to
         # modify .msg in-place instead of .sql
         begin = record.msg.index('SELECT')
-        end = record.msg.index('FROM')
+        try:
+            end = record.msg.index('FROM')
+        except ValueError:  # not all SELECT statements also have a FROM
+            end = -1
         if end - begin > 100:
             record.msg = u'{0} ... {1}'.format(
-                    record.msg[:begin + 6], record.msg[end:])
+                record.msg[:begin + 6], record.msg[end:])
         return True
