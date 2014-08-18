@@ -136,6 +136,33 @@ class HeidiReadableSqlFilter(TestCase):
         logger = logging.getLogger('test')
         logger.addFilter(ReadableSqlFilter())
 
+    def test_filter_trivial_case(self):
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': '',
+            'msg': '',
+        })
+        self.assertTrue(logging_filter.filter(record))
+
+    def test_filter_formats_select_from(self):
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': u'SELECT foo',
+            'msg': u'(yolo) SELECT {0} FROM moo'.format('*' * 512),
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertIn(u'SELECT ... FROM moo', record.msg)
+
+    def test_filter_formats_ignores_select_without_from(self):
+        logging_filter = ReadableSqlFilter()
+        original_msg = u'(yolo) SELECT {0} moo'.format('*' * 512)
+        record = type('mock_record', (object, ), {
+            'sql': u'SELECT foo',
+            'msg': original_msg,
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertEqual(original_msg, record.msg)
+
 
 if __name__ == '__main__':
     unittest.main()
