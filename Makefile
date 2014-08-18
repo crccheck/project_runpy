@@ -15,14 +15,14 @@ build:
 all: clean build
 
 test:
-	python tests.py
+	python test_project_runpy.py
 
 tox:
 	tox
 
 coverage:
 	coverage erase
-	coverage run tests.py
+	coverage run test_project_runpy.py
 	coverage report --show-missing
 
 # remember you need `pip install wheel`
