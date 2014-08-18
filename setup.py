@@ -1,7 +1,8 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='project_runpy',
+    # remember to update __init__.py
     version='0.3.0',
     author='Chris Chang',
     author_email='c@crccheck.com',
@@ -18,6 +19,7 @@ setup(
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.3",
+        'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )
