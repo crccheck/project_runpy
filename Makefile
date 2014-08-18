@@ -20,5 +20,10 @@ test:
 tox:
 	tox
 
+coverage:
+	coverage erase
+	coverage run tests.py
+	coverage report --show-missing
 
-.PHONY: clean build all test tox
+
+.PHONY: build
