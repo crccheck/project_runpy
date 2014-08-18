@@ -2,6 +2,7 @@ from setuptools import setup
 
 setup(
     name='project_runpy',
+    # remember to update __init__.py
     version='0.3.0',
     author='Chris Chang',
     author_email='c@crccheck.com',
