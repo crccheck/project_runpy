@@ -87,8 +87,9 @@ Django::
 ``ReadableSqlFilter``
 ---------------------
 
-A logging filter designed to make the ``django.db.backends`` console output more
-readable.
+A logging filter designed to make the ``django.db.backends`` console output
+more readable. This is an alternate to Django Debug Toolbar's SQL panel (which,
+you should be using too)
 
 Turns::
 
