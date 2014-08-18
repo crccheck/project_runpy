@@ -18,7 +18,9 @@ Get information about your environment variables.
 ``.get(key, ...)``
 ~~~~~~~~~~~~~~~~~~
 
-You can use ``env.get`` as a drop-in replacement for ``os.environ.get``::
+You can use ``env.get`` as a drop-in replacement for ``os.environ.get``. It
+acts the same but is smarter about types and has extra magic for ENVIRONMENT
+based settings::
 
     from project_runpy import env
 
