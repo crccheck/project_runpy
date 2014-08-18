@@ -15,7 +15,7 @@ all: clean build
 
 
 test:
-	nosetests
+	python tests.py
 
 tox:
 	tox

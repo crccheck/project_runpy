@@ -1,4 +1,5 @@
 import logging
+import unittest
 
 try:
     from unittest2 import TestCase
@@ -134,3 +135,7 @@ class HeidiReadableSqlFilter(TestCase):
         # assert can add filter without an exception getting raised
         logger = logging.getLogger('test')
         logger.addFilter(ReadableSqlFilter())
+
+
+if __name__ == '__main__':
+    unittest.main()
