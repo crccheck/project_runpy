@@ -1,6 +1,12 @@
 project_runpy
 =============
 
+.. image:: https://travis-ci.org/crccheck/project_runpy.svg
+    :target: https://travis-ci.org/crccheck/project_runpy
+
+.. image:: https://coveralls.io/repos/crccheck/project_runpy/badge.png
+    :target: https://coveralls.io/r/crccheck/project_runpy
+
 Generic helpers I wish existed or am constantly copying into my Python projects.
 
 
@@ -12,7 +18,9 @@ Get information about your environment variables.
 ``.get(key, ...)``
 ~~~~~~~~~~~~~~~~~~
 
-You can use ``env.get`` as a drop-in replacement for ``os.environ.get``::
+You can use ``env.get`` as a drop-in replacement for ``os.environ.get``. It
+acts the same but is smarter about types and has extra magic for ENVIRONMENT
+based settings::
 
     from project_runpy import env
 
@@ -81,8 +89,9 @@ Django::
 ``ReadableSqlFilter``
 ---------------------
 
-A logging filter designed to make the ``django.db.backends`` console output more
-readable.
+A logging filter designed to make the ``django.db.backends`` console output
+more readable. This is an alternate to Django Debug Toolbar's SQL panel (which,
+you should be using too)
 
 Turns::
 
