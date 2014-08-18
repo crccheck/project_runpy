@@ -1,6 +1,12 @@
 project_runpy
 =============
 
+.. image:: https://travis-ci.org/crccheck/project_runpy.svg
+    :target: https://travis-ci.org/crccheck/project_runpy
+
+.. image:: https://coveralls.io/repos/crccheck/project_runpy/badge.png
+    :target: https://coveralls.io/r/crccheck/project_runpy
+
 Generic helpers I wish existed or am constantly copying into my Python projects.
 
 
