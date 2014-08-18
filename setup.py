@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='project_runpy',
     # remember to update __init__.py
-    version='0.3.0',
+    version='0.3.1',
     author='Chris Chang',
     author_email='c@crccheck.com',
     url='https://github.com/crccheck/project_runpy',
