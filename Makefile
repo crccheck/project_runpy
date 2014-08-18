@@ -8,11 +8,11 @@ clean:
 	find . -name ".DS_Store" -delete
 	find . -name "__pycache__" -delete
 
+.PHONY: build
 build:
-	python setup.py sdist
+	python setup.py sdist bdist_wheel
 
 all: clean build
-
 
 test:
 	python tests.py
@@ -25,5 +25,6 @@ coverage:
 	coverage run tests.py
 	coverage report --show-missing
 
-
-.PHONY: build
+# remember you need `pip install wheel`
+release:
+	python setup.py sdist bdist_wheel upload
