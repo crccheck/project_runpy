@@ -4,29 +4,6 @@ project_runpy
 Generic helpers I wish existed or am constantly copying into my Python projects.
 
 
-``create_project_dir``
-----------------------
-
-When you need to build an absolute path but only feel like providing a relative
-path.
-
-Example Usage::
-
-    from project_runpy import create_project_dir
-
-    _ = create_project_dir()
-    DATABASE = _('project.db')
-
-    _ = create_project_dir('..')
-    STATIC_ROOT = _('static_root')
-
-    _ = create_project_dir('..', '..')
-    LOCATION = _('FOO', 'BAR', '..', 'BAZ')
-
-Pass the path to get to your project root into ``create_project_dir``, then use
-the function it returns to turn relative paths into absolute paths.
-
-
 ``env``
 -------
 
