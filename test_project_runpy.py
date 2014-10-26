@@ -16,6 +16,9 @@ from project_runpy import (
 )
 
 
+VERY_LONG_STRING = u'*' * 512
+
+
 class TestTimEnv(TestCase):
     def setUp(self):
         self.key = '_tim_test'
@@ -148,20 +151,30 @@ class HeidiReadableSqlFilter(TestCase):
         logging_filter = ReadableSqlFilter()
         record = type('mock_record', (object, ), {
             'sql': u'SELECT foo',
-            'msg': u'(yolo) SELECT {0} FROM moo'.format('*' * 512),
+            'msg': u'(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING),
         })
         self.assertTrue(logging_filter.filter(record))
         self.assertIn(u'SELECT ... FROM moo', record.msg)
 
     def test_filter_formats_ignores_select_without_from(self):
         logging_filter = ReadableSqlFilter()
-        original_msg = u'(yolo) SELECT {0} moo'.format('*' * 512)
+        original_msg = u'(yolo) SELECT {0} moo'.format(VERY_LONG_STRING)
         record = type('mock_record', (object, ), {
             'sql': u'SELECT foo',
             'msg': original_msg,
         })
         self.assertTrue(logging_filter.filter(record))
         self.assertEqual(original_msg, record.msg)
+
+    def test_filter_formats_select_from_dj17(self):
+        sql = u"""QUERY = "\n            SELECT name, {0} FROM sqlite_master\n            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'\n            ORDER BY name" - PARAMS = ()""".format(VERY_LONG_STRING)
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': sql,
+            'msg': u'(yolo) {0}'.format(sql),
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertNotIn(VERY_LONG_STRING, record.msg)
 
 
 if __name__ == '__main__':

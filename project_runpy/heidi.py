@@ -118,7 +118,12 @@ class ReadableSqlFilter(logging.Filter):
     """
 
     def filter(self, record):
-        if record.sql[:6] != 'SELECT':
+        # Django 1.7 changed the way SQL got logged for some reason:
+        # https://code.djangoproject.com/ticket/17158
+        # https://github.com/django/django/commit/6605ac331a9e0
+        if 'SELECT' not in record.sql[:28]:
+            # WISHLIST what's the most performant way to see if 'SELECT' was
+            # used?
             return True
 
         # unfortunately, record.msg has already been rendered so we have to
