@@ -151,6 +151,15 @@ class HeidiReadableSqlFilter(TestCase):
         logging_filter = ReadableSqlFilter()
         record = type('mock_record', (object, ), {
             'sql': u'SELECT foo',
+            'msg': u'(yolo) SELECT foo FROM moo',
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertIn(u'SELECT ... FROM moo', record.msg)
+
+    def test_filter_formats_select_from_long(self):
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': u'SELECT foo',
             'msg': u'(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING),
         })
         self.assertTrue(logging_filter.filter(record))

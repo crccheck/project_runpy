@@ -132,8 +132,7 @@ class ReadableSqlFilter(logging.Filter):
         try:
             end = record.msg.index('FROM')
         except ValueError:  # not all SELECT statements also have a FROM
-            end = -1
-        if end - begin > 100:
-            record.msg = u'{0} ... {1}'.format(
-                record.msg[:begin + 6], record.msg[end:])
+            return True
+        record.msg = u'{0} ... {1}'.format(
+            record.msg[:begin + 6], record.msg[end:])
         return True
