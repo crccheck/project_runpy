@@ -185,6 +185,26 @@ class HeidiReadableSqlFilter(TestCase):
         self.assertTrue(logging_filter.filter(record))
         self.assertNotIn(VERY_LONG_STRING, record.msg)
 
+    def test_filter_removes_args(self):
+        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC; args=()"""
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': sql,
+            'msg': u'(yolo) {0}'.format(sql),
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertNotIn('; args=()', record.msg)
+
+        # assert it also works when there's no args to begin with
+        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC"""
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': sql,
+            'msg': u'(yolo) {0}'.format(sql),
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertNotIn('; args=()', record.msg)
+
 
 if __name__ == '__main__':
     unittest.main()
