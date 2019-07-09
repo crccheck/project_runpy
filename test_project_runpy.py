@@ -146,6 +146,15 @@ class HeidiReadableSqlFilter(TestCase):
         logging_filter = ReadableSqlFilter()
         record = type('mock_record', (object, ), {
             'sql': u'SELECT foo',
+            'msg': u'(yolo) SELECT foo FROM moo',
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertIn(u'SELECT ... FROM moo', record.msg)
+
+    def test_filter_formats_select_from_long(self):
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': u'SELECT foo',
             'msg': u'(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING),
         })
         self.assertTrue(logging_filter.filter(record))
@@ -170,6 +179,26 @@ class HeidiReadableSqlFilter(TestCase):
         })
         self.assertTrue(logging_filter.filter(record))
         self.assertNotIn(VERY_LONG_STRING, record.msg)
+
+    def test_filter_removes_args(self):
+        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC; args=()"""
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': sql,
+            'msg': u'(yolo) {0}'.format(sql),
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertNotIn('; args=()', record.msg)
+
+        # assert it also works when there's no args to begin with
+        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC"""
+        logging_filter = ReadableSqlFilter()
+        record = type('mock_record', (object, ), {
+            'sql': sql,
+            'msg': u'(yolo) {0}'.format(sql),
+        })
+        self.assertTrue(logging_filter.filter(record))
+        self.assertNotIn('; args=()', record.msg)
 
 
 if __name__ == '__main__':
