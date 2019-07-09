@@ -4,7 +4,12 @@ python:
   - "2.7"
   - "3.7"
   - "3.6"
-# install:
+install:
 #   - pip install tox coveralls
-# script: tox -e $TOX_ENV
+script: python test_project_runpy.py
 # after_success: coveralls
+branches:
+  only:
+    - master
+notifications:
+  email: false
