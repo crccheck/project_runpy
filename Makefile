@@ -8,8 +8,6 @@ install: ## Install requirements
 clean:
 	rm -rf *.egg-info
 	rm -rf dist
-	rm -rf MANIFEST
-	find . -name "*.pyc" -delete
 	find . -name ".DS_Store" -delete
 	find . -name "__pycache__" -delete
 
