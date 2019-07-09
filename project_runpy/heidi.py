@@ -6,12 +6,8 @@ import logging
 __all__ = ['ColorizingStreamHandler', 'ReadableSqlFilter']
 
 
-#
 # Copyright (C) 2010-2012 Vinay Sajip. All rights reserved. Licensed under the new BSD license.
 # https://gist.github.com/758430
-#
-
-
 class ColorizingStreamHandler(logging.StreamHandler):
     # color names to indices
     color_map = {
@@ -84,9 +80,8 @@ class ColorizingStreamHandler(logging.StreamHandler):
         return message
 
 
-###########
-# FILTERS #
-###########
+# LOGGING FILTERS
+#################
 
 class ReadableSqlFilter(logging.Filter):
     """
@@ -94,9 +89,7 @@ class ReadableSqlFilter(logging.Filter):
 
     Modeled after how debug toolbar displays SQL. This code should be optimized
     for performance. For example, I don't check to make sure record.name is
-    'django.db.backends' because I assume you put this filter alongside it. I
-    also assume there is going to be a 'FROM' if there's a 'SELECT' and don't
-    catch the ValueError that would result from that.
+    'django.db.backends' because I assume you put this filter alongside it.
 
     Sample Usage in Django's `settings.py`:
 
