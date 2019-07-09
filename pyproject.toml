@@ -7,5 +7,14 @@ module = "project_runpy"
 author = "Chris Chang"
 author-email = "c@crccheck.com"
 home-page = "https://github.com/crccheck/project_runpy"
-classifiers = ["License :: OSI Approved :: Apache Software License"]
-
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 2.7",
+  "Programming Language :: Python :: 3.5",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
