@@ -129,8 +129,13 @@ class HeidiColorizingStreamHandler(TestCase):
 
 class HeidiReadableSqlFilter(TestCase):
     def test_it_can_be_added_to_logger(self):
-        logger = logging.getLogger('test')
+        logger = logging.getLogger('foo.sql')
+        logger.addHandler(logging.NullHandler())
         logger.addFilter(ReadableSqlFilter())
+        with self.assertRaises(ValueError):
+            # Sanity check
+            logger.warning('original msg %s %s %s')
+        logger.warning('original msg %s %s %s', '0.1', 'NOT SQL', ())
 
     def test_filter_trivial_case(self):
         logging_filter = ReadableSqlFilter()

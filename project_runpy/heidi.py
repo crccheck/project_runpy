@@ -116,15 +116,15 @@ class ReadableSqlFilter(logging.Filter):
         if 'SELECT' not in sql[:28]:
             # WISHLIST what's the most performant way to see if 'SELECT' was
             # used?
-            return True
+            return super().filter(record)
 
         begin = sql.index('SELECT')
         try:
             end = sql.index('FROM', begin + 6)
         except ValueError:  # not all SELECT statements also have a FROM
-            return True
+            return super().filter(record)
 
         sql = u'{0} ... {1}'.format(sql[:begin + 6], sql[end:])
         record.msg = '(%.3f) %s'
         record.args = (duration, sql)
-        return True
+        return super().filter(record)
