@@ -111,25 +111,23 @@ class ReadableSqlFilter(logging.Filter):
     """
 
     def filter(self, record):
-        # Django 1.7 changed the way SQL got logged for some reason:
-        # https://code.djangoproject.com/ticket/17158
-        # https://github.com/django/django/commit/6605ac331a9e0
-        if 'SELECT' not in record.sql[:28]:
+        # https://github.com/django/django/blob/master/django/db/backends/utils.py
+        duration, sql, params = record.args
+        if 'SELECT' not in sql[:28]:
             # WISHLIST what's the most performant way to see if 'SELECT' was
             # used?
             return True
 
-        # unfortunately, record.msg has already been rendered so we have to
-        # modify .msg in-place instead of .sql
-        begin = record.msg.index('SELECT')
+        begin = sql.index('SELECT')
         try:
-            end = record.msg.index('FROM')
+            end = sql.index('FROM')
         except ValueError:  # not all SELECT statements also have a FROM
             return True
+
         try:
-            very_end = record.msg.rindex(u'; args') + 1
+            very_end = sql.rindex(u'; args') + 1
         except ValueError:  # msg does not have "args" to strip
             very_end = None
-        record.msg = u'{0} ... {1}'.format(
-            record.msg[:begin + 6], record.msg[end:very_end])
+        sql = u'{0} ... {1}'.format(sql[:begin + 6], sql[end:very_end])
+        record.args = (duration, sql, params)
         return True
