@@ -6,12 +6,8 @@ import logging
 __all__ = ['ColorizingStreamHandler', 'ReadableSqlFilter']
 
 
-#
 # Copyright (C) 2010-2012 Vinay Sajip. All rights reserved. Licensed under the new BSD license.
 # https://gist.github.com/758430
-#
-
-
 class ColorizingStreamHandler(logging.StreamHandler):
     # color names to indices
     color_map = {
@@ -84,9 +80,8 @@ class ColorizingStreamHandler(logging.StreamHandler):
         return message
 
 
-###########
-# FILTERS #
-###########
+# LOGGING FILTERS
+#################
 
 class ReadableSqlFilter(logging.Filter):
     """
@@ -94,9 +89,7 @@ class ReadableSqlFilter(logging.Filter):
 
     Modeled after how debug toolbar displays SQL. This code should be optimized
     for performance. For example, I don't check to make sure record.name is
-    'django.db.backends' because I assume you put this filter alongside it. I
-    also assume there is going to be a 'FROM' if there's a 'SELECT' and don't
-    catch the ValueError that would result from that.
+    'django.db.backends' because I assume you put this filter alongside it.
 
     Sample Usage in Django's `settings.py`:
 
@@ -118,25 +111,21 @@ class ReadableSqlFilter(logging.Filter):
     """
 
     def filter(self, record):
-        # Django 1.7 changed the way SQL got logged for some reason:
-        # https://code.djangoproject.com/ticket/17158
-        # https://github.com/django/django/commit/6605ac331a9e0
-        if 'SELECT' not in record.sql[:28]:
+        # https://github.com/django/django/blob/febe136d4c3310ec8901abecca3ea5ba2be3952c/django/db/backends/utils.py#L106-L131
+        duration, sql, *__ = record.args
+        if 'SELECT' not in sql[:28]:
             # WISHLIST what's the most performant way to see if 'SELECT' was
             # used?
-            return True
+            return super().filter(record)
 
-        # unfortunately, record.msg has already been rendered so we have to
-        # modify .msg in-place instead of .sql
-        begin = record.msg.index('SELECT')
+        begin = sql.index('SELECT')
         try:
-            end = record.msg.index('FROM')
+            end = sql.index('FROM', begin + 6)
         except ValueError:  # not all SELECT statements also have a FROM
-            return True
-        try:
-            very_end = record.msg.rindex(u'; args') + 1
-        except ValueError:  # msg does not have "args" to strip
-            very_end = None
-        record.msg = u'{0} ... {1}'.format(
-            record.msg[:begin + 6], record.msg[end:very_end])
-        return True
+            return super().filter(record)
+
+        sql = '{0}...{1}'.format(sql[:begin + 6], sql[end:])
+        # Drop "; args=%s" to shorten logging output
+        record.msg = '(%.3f) %s'
+        record.args = (duration, sql)
+        return super().filter(record)

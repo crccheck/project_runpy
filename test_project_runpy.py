@@ -1,7 +1,7 @@
 import logging
 import os
 import unittest
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from project_runpy import (
     ColorizingStreamHandler,
@@ -11,7 +11,7 @@ from project_runpy import (
 )
 
 
-VERY_LONG_STRING = u'*' * 512
+VERY_LONG_STRING = '*' * 512
 
 
 class TestTimEnv(TestCase):
@@ -113,7 +113,7 @@ class TestTimEnv(TestCase):
             env.require('FOO', default='')
 
         with self.assertRaises(ImproperlyConfigured):
-            env.require('FOO', default=u'')
+            env.require('FOO', default='')
 
     def test_require_acts_like_get(self):
         os.environ['FOO'] = 'BAR'
@@ -122,83 +122,54 @@ class TestTimEnv(TestCase):
 
 
 class HeidiColorizingStreamHandler(TestCase):
-    def test_it_works(self):
-        # assert can add handler without an exception getting raised
+    def test_it_can_be_added_to_logger(self):
         logger = logging.getLogger('test')
         logger.addHandler(ColorizingStreamHandler())
 
 
 class HeidiReadableSqlFilter(TestCase):
-    def test_it_works(self):
-        # assert can add filter without an exception getting raised
-        logger = logging.getLogger('test')
+    def test_it_can_be_added_to_logger(self):
+        logger = logging.getLogger('foo.sql')
+        logger.addHandler(logging.NullHandler())
         logger.addFilter(ReadableSqlFilter())
+        with self.assertRaises(ValueError):
+            # Sanity check
+            logger.warning('original msg %s %s %s')
+        logger.warning('original msg %s %s %s', '0.1', 'NOT SQL', ())
 
     def test_filter_trivial_case(self):
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': '',
-            'msg': '',
-        })
+        record = mock.MagicMock(args=())
+        record = mock.MagicMock(args=(1.0, 'foo', ()))
         self.assertTrue(logging_filter.filter(record))
+        self.assertEqual('foo', record.args[1])
+
+    def test_filter_params_is_optional(self):
+        logging_filter = ReadableSqlFilter()
+        record = mock.MagicMock(args=())
+        record = mock.MagicMock(args=(1.0, 'foo'))
+        self.assertTrue(logging_filter.filter(record))
+        self.assertEqual('foo', record.args[1])
 
     def test_filter_formats_select_from(self):
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': u'SELECT foo',
-            'msg': u'(yolo) SELECT foo FROM moo',
-        })
+        record = mock.MagicMock(args=(1.0, '(yolo) SELECT foo FROM moo'))
         self.assertTrue(logging_filter.filter(record))
-        self.assertIn(u'SELECT ... FROM moo', record.msg)
+        self.assertIn('SELECT...FROM moo', record.args[1])
 
     def test_filter_formats_select_from_long(self):
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': u'SELECT foo',
-            'msg': u'(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING),
-        })
+        original_sql = '(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING)
+        record = mock.MagicMock(args=(1.0, original_sql))
         self.assertTrue(logging_filter.filter(record))
-        self.assertIn(u'SELECT ... FROM moo', record.msg)
+        self.assertIn('SELECT...FROM moo', record.args[1])
 
     def test_filter_formats_ignores_select_without_from(self):
         logging_filter = ReadableSqlFilter()
-        original_msg = u'(yolo) SELECT {0} moo'.format(VERY_LONG_STRING)
-        record = type('mock_record', (object, ), {
-            'sql': u'SELECT foo',
-            'msg': original_msg,
-        })
+        original_sql = '(yolo) SELECT {0} moo'.format(VERY_LONG_STRING)
+        record = mock.MagicMock(args=(1.0, original_sql))
         self.assertTrue(logging_filter.filter(record))
-        self.assertEqual(original_msg, record.msg)
-
-    def test_filter_formats_select_from_dj17(self):
-        sql = u"""QUERY = "\n            SELECT name, {0} FROM sqlite_master\n            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'\n            ORDER BY name" - PARAMS = ()""".format(VERY_LONG_STRING)
-        logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': sql,
-            'msg': u'(yolo) {0}'.format(sql),
-        })
-        self.assertTrue(logging_filter.filter(record))
-        self.assertNotIn(VERY_LONG_STRING, record.msg)
-
-    def test_filter_removes_args(self):
-        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC; args=()"""
-        logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': sql,
-            'msg': u'(yolo) {0}'.format(sql),
-        })
-        self.assertTrue(logging_filter.filter(record))
-        self.assertNotIn('; args=()', record.msg)
-
-        # assert it also works when there's no args to begin with
-        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC"""
-        logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': sql,
-            'msg': u'(yolo) {0}'.format(sql),
-        })
-        self.assertTrue(logging_filter.filter(record))
-        self.assertNotIn('; args=()', record.msg)
+        self.assertEqual(original_sql, record.args[1])
 
 
 if __name__ == '__main__':

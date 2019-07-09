@@ -4,9 +4,6 @@ project_runpy
 .. image:: https://travis-ci.org/crccheck/project_runpy.svg
     :target: https://travis-ci.org/crccheck/project_runpy
 
-.. image:: https://coveralls.io/repos/crccheck/project_runpy/badge.png
-    :target: https://coveralls.io/r/crccheck/project_runpy
-
 Generic helpers I wish existed or am constantly copying into my Python projects.
 
 
@@ -92,8 +89,10 @@ Django::
 A logging filter designed to make the ``django.db.backends`` output more
 readable in local dev. This is an alternate to Django Debug Toolbar's SQL panel
 (which, you should be using too) and adds feedback for queries outside HTML.
+This **will slow down** your dev server, but it's a tradeoff for getting faster
+feedback for optimizing your queries.
 
-Django compatibility: Django < 2.0
+Django compatibility: Django >= 2.0
 
 Turns::
 
@@ -108,7 +107,9 @@ Turns::
 
 Into::
 
-    (0.002) SELECT ... FROM "tx_elevators_building" LIMIT 21; args=()
+    (0.002) SELECT...FROM "tx_elevators_building" LIMIT 21
+
+And when you have many queries, they all line up nicely in your terminal.
 
 To install, edit your Django settings::
 
