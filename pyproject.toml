@@ -7,7 +7,7 @@ module = "project_runpy"
 author = "Chris Chang"
 author-email = "c@crccheck.com"
 home-page = "https://github.com/crccheck/project_runpy"
-requires-python="3"
+requires-python = ">=3"
 description-file = "README.rst"
 classifiers = [
   "Development Status :: 4 - Beta",

@@ -3,4 +3,4 @@
 from .heidi import *  # noqa: F401 F403
 from .tim import *  # noqa: F401 F403
 
-__version__ = '0.4.0'
+__version__ = '1.0.0'
