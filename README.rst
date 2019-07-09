@@ -108,7 +108,7 @@ Turns::
 
 Into::
 
-    (0.002) SELECT ... FROM "tx_elevators_building" LIMIT 21
+    (0.002) SELECT...FROM "tx_elevators_building" LIMIT 21
 
 And when you have many queries, they all line up nicely in your terminal.
 
