@@ -17,9 +17,6 @@ build:
 	flit build
 
 test: ## Run test suite
-	python test_project_runpy.py
-
-coverage:
 	coverage erase
 	coverage run test_project_runpy.py
 	coverage report
