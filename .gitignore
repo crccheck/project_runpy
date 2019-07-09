@@ -1,15 +1,11 @@
-
-
 # Private user files
 .env
-
 
 # Generated files
 *.pyc
 .DS_Store
 .coverage
 .tox
-
 
 # setup.py generated files
 *.egg-info

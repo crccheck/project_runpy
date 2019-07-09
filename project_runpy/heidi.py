@@ -25,7 +25,7 @@ class ColorizingStreamHandler(logging.StreamHandler):
         'white': 7,
     }
 
-    #levels to (background, foreground, bold/intense)
+    # levels to (background, foreground, bold/intense)
     level_map = {
         logging.DEBUG: (None, 'blue', False),
         logging.INFO: (None, 'white', False),
@@ -53,7 +53,7 @@ class ColorizingStreamHandler(logging.StreamHandler):
             self.flush()
         except (KeyboardInterrupt, SystemExit):
             raise
-        except:
+        except:  # noqa: E722
             self.handleError(record)
 
     def output_colorized(self, message):
