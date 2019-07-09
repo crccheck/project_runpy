@@ -4,7 +4,6 @@ python:
   - "3.7"
   - "3.6"
   - "3.5"
-  - "2.7"
 install:
 script: python test_project_runpy.py
 branches:

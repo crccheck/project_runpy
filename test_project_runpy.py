@@ -11,7 +11,7 @@ from project_runpy import (
 )
 
 
-VERY_LONG_STRING = u'*' * 512
+VERY_LONG_STRING = '*' * 512
 
 
 class TestTimEnv(TestCase):
@@ -113,7 +113,7 @@ class TestTimEnv(TestCase):
             env.require('FOO', default='')
 
         with self.assertRaises(ImproperlyConfigured):
-            env.require('FOO', default=u'')
+            env.require('FOO', default='')
 
     def test_require_acts_like_get(self):
         os.environ['FOO'] = 'BAR'
@@ -155,7 +155,7 @@ class HeidiReadableSqlFilter(TestCase):
         original_sql = '(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING)
         record = mock.MagicMock(args=(1.0, original_sql, ()))
         self.assertTrue(logging_filter.filter(record))
-        self.assertIn(u'SELECT ... FROM moo', record.args[1])
+        self.assertIn('SELECT ... FROM moo', record.args[1])
 
     def test_filter_formats_ignores_select_without_from(self):
         logging_filter = ReadableSqlFilter()
