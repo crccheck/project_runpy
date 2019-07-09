@@ -1,10 +1,10 @@
+dist: xenial
 language: python
-env:
-  - TOX_ENV=py26
-  - TOX_ENV=py27
-  - TOX_ENV=py33
-  - TOX_ENV=py34
-install:
-  - pip install tox coveralls
-script: tox -e $TOX_ENV
-after_success: coveralls
+python:
+  - "2.7"
+  - "3.7"
+  - "3.6"
+# install:
+#   - pip install tox coveralls
+# script: tox -e $TOX_ENV
+# after_success: coveralls
