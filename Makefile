@@ -22,7 +22,7 @@ test: ## Run test suite
 coverage:
 	coverage erase
 	coverage run test_project_runpy.py
-	coverage report --show-missing
+	coverage report
 
 publish: ## Publish a release to PyPI
 	flit publish
