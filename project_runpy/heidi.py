@@ -125,6 +125,7 @@ class ReadableSqlFilter(logging.Filter):
             return super().filter(record)
 
         sql = '{0} ... {1}'.format(sql[:begin + 6], sql[end:])
+        # Drop "; args=%s" to shorten logging output
         record.msg = '(%.3f) %s'
         record.args = (duration, sql)
         return super().filter(record)
