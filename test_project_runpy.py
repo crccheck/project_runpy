@@ -1,7 +1,7 @@
 import logging
 import os
 import unittest
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from project_runpy import (
     ColorizingStreamHandler,
@@ -136,20 +136,14 @@ class HeidiReadableSqlFilter(TestCase):
 
     def test_filter_trivial_case(self):
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': '',
-            'msg': '',
-        })
+        record = mock.MagicMock(args=())
         self.assertTrue(logging_filter.filter(record))
 
     def test_filter_formats_select_from(self):
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': u'SELECT foo',
-            'msg': u'(yolo) SELECT foo FROM moo',
-        })
+        record = mock.MagicMock(args=(1.0, '(yolo) SELECT foo FROM moo', ()))
         self.assertTrue(logging_filter.filter(record))
-        self.assertIn(u'SELECT ... FROM moo', record.msg)
+        self.assertIn('SELECT ... FROM moo', record.args[1])
 
     def test_filter_formats_select_from_long(self):
         logging_filter = ReadableSqlFilter()
@@ -162,13 +156,10 @@ class HeidiReadableSqlFilter(TestCase):
 
     def test_filter_formats_ignores_select_without_from(self):
         logging_filter = ReadableSqlFilter()
-        original_msg = u'(yolo) SELECT {0} moo'.format(VERY_LONG_STRING)
-        record = type('mock_record', (object, ), {
-            'sql': u'SELECT foo',
-            'msg': original_msg,
-        })
+        original_sql = '(yolo) SELECT {0} moo'.format(VERY_LONG_STRING)
+        record = mock.MagicMock(args=(1.0, original_sql, ()))
         self.assertTrue(logging_filter.filter(record))
-        self.assertEqual(original_msg, record.msg)
+        self.assertEqual(original_sql, record.args[1])
 
     def test_filter_formats_select_from_dj17(self):
         sql = u"""QUERY = "\n            SELECT name, {0} FROM sqlite_master\n            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'\n            ORDER BY name" - PARAMS = ()""".format(VERY_LONG_STRING)
