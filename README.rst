@@ -93,7 +93,7 @@ A logging filter designed to make the ``django.db.backends`` output more
 readable in local dev. This is an alternate to Django Debug Toolbar's SQL panel
 (which, you should be using too) and adds feedback for queries outside HTML.
 
-Django compatibility: Django < 2.0
+Django compatibility: Django >= 2.0
 
 Turns::
 
@@ -108,7 +108,9 @@ Turns::
 
 Into::
 
-    (0.002) SELECT ... FROM "tx_elevators_building" LIMIT 21; args=()
+    (0.002) SELECT ... FROM "tx_elevators_building" LIMIT 21
+
+And when you have many queries, they all line up nicely in your terminal.
 
 To install, edit your Django settings::
 
