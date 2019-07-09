@@ -1,6 +1,5 @@
 clean:
 	rm -rf *.egg-info
-	rm -rf .tox
 	rm -rf build
 	rm -rf dist
 	rm -rf MANIFEST
@@ -16,9 +15,6 @@ all: clean build
 
 test:
 	python test_project_runpy.py
-
-tox:
-	tox
 
 coverage:
 	coverage erase

@@ -5,9 +5,7 @@ python:
   - "3.7"
   - "3.6"
 install:
-#   - pip install tox coveralls
 script: python test_project_runpy.py
-# after_success: coveralls
 branches:
   only:
     - master
