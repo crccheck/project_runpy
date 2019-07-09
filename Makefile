@@ -16,6 +16,9 @@ clean:
 build:
 	flit build
 
+tdd: ## Run test watcher
+	nodemon -e py -x "python test_project_runpy.py --failfast"
+
 test: ## Run test suite
 	coverage erase
 	coverage run test_project_runpy.py
