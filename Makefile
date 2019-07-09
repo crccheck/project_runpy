@@ -21,5 +21,11 @@ test: ## Run test suite
 	coverage run test_project_runpy.py
 	coverage report
 
+# Bump project_runpy.__version__
+# Update CHANGELOG (TODO)
+# `git commit -am "1.0.0"`
+# `git tag v1.0.0`
+# `make publish`
+# `git push --tags origin master`
 publish: ## Publish a release to PyPI
 	flit publish
