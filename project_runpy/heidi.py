@@ -120,7 +120,7 @@ class ReadableSqlFilter(logging.Filter):
 
         begin = sql.index('SELECT')
         try:
-            end = sql.index('FROM')
+            end = sql.index('FROM', begin + 6)
         except ValueError:  # not all SELECT statements also have a FROM
             return True
 
