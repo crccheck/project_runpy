@@ -92,6 +92,8 @@ Django::
 A logging filter designed to make the ``django.db.backends`` output more
 readable in local dev. This is an alternate to Django Debug Toolbar's SQL panel
 (which, you should be using too) and adds feedback for queries outside HTML.
+This **will slow down** your dev server, but it's a tradeoff for getting faster
+feedback for optimizing your queries.
 
 Django compatibility: Django >= 2.0
 
