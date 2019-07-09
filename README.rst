@@ -93,6 +93,8 @@ A logging filter designed to make the ``django.db.backends`` console output
 more readable. This is an alternate to Django Debug Toolbar's SQL panel (which,
 you should be using too)
 
+Django compatibility: Django < 2.0
+
 Turns::
 
     (0.002) SELECT "tx_elevators_building"."id", "tx_elevators_building"."elbi",
