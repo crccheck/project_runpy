@@ -1,6 +1,8 @@
+help: ## Shows this help
+	@echo "$$(grep -h '#\{2\}' $(MAKEFILE_LIST) | sed 's/: #\{2\} /	/' | column -t -s '	')"
+
 clean:
 	rm -rf *.egg-info
-	rm -rf .tox
 	rm -rf build
 	rm -rf dist
 	rm -rf MANIFEST
@@ -14,11 +16,8 @@ build:
 
 all: clean build
 
-test:
+test: ## Run test suite
 	python test_project_runpy.py
-
-tox:
-	tox
 
 coverage:
 	coverage erase

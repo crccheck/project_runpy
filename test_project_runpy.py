@@ -1,12 +1,7 @@
 import logging
-import unittest
-
-try:
-    from unittest2 import TestCase
-except ImportError:
-    from unittest import TestCase
 import os
-
+import unittest
+from unittest import TestCase
 
 from project_runpy import (
     ColorizingStreamHandler,
