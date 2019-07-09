@@ -159,20 +159,6 @@ class HeidiReadableSqlFilter(TestCase):
         self.assertTrue(logging_filter.filter(record))
         self.assertEqual(original_sql, record.args[1])
 
-    def test_filter_removes_args(self):
-        logging_filter = ReadableSqlFilter()
-        original_sql = 'SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC; args=()'
-        record = mock.MagicMock(args=(1.0, original_sql, ()))
-        self.assertTrue(logging_filter.filter(record))
-        self.assertNotIn('; args=()', record.args[1])
-
-    def test_filter_removes_args_trivial(self):
-        logging_filter = ReadableSqlFilter()
-        original_sql = 'SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC'
-        record = mock.MagicMock(args=(1.0, original_sql, ()))
-        self.assertTrue(logging_filter.filter(record))
-        self.assertNotIn('; args=()', record.msg)
-
 
 if __name__ == '__main__':
     unittest.main()

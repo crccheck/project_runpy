@@ -124,10 +124,6 @@ class ReadableSqlFilter(logging.Filter):
         except ValueError:  # not all SELECT statements also have a FROM
             return True
 
-        try:
-            very_end = sql.rindex(u'; args') + 1
-        except ValueError:  # msg does not have "args" to strip
-            very_end = None
-        sql = u'{0} ... {1}'.format(sql[:begin + 6], sql[end:very_end])
+        sql = u'{0} ... {1}'.format(sql[:begin + 6], sql[end:])
         record.args = (duration, sql, params)
         return True
