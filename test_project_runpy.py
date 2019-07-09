@@ -137,7 +137,9 @@ class HeidiReadableSqlFilter(TestCase):
     def test_filter_trivial_case(self):
         logging_filter = ReadableSqlFilter()
         record = mock.MagicMock(args=())
+        record = mock.MagicMock(args=(1.0, 'foo', ()))
         self.assertTrue(logging_filter.filter(record))
+        self.assertEqual('foo', record.args[1])
 
     def test_filter_formats_select_from(self):
         logging_filter = ReadableSqlFilter()
@@ -147,12 +149,10 @@ class HeidiReadableSqlFilter(TestCase):
 
     def test_filter_formats_select_from_long(self):
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': u'SELECT foo',
-            'msg': u'(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING),
-        })
+        original_sql = '(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING)
+        record = mock.MagicMock(args=(1.0, original_sql, ()))
         self.assertTrue(logging_filter.filter(record))
-        self.assertIn(u'SELECT ... FROM moo', record.msg)
+        self.assertIn(u'SELECT ... FROM moo', record.args[1])
 
     def test_filter_formats_ignores_select_without_from(self):
         logging_filter = ReadableSqlFilter()
@@ -162,22 +162,16 @@ class HeidiReadableSqlFilter(TestCase):
         self.assertEqual(original_sql, record.args[1])
 
     def test_filter_removes_args(self):
-        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC; args=()"""
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': sql,
-            'msg': u'(yolo) {0}'.format(sql),
-        })
+        original_sql = 'SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC; args=()'
+        record = mock.MagicMock(args=(1.0, original_sql, ()))
         self.assertTrue(logging_filter.filter(record))
-        self.assertNotIn('; args=()', record.msg)
+        self.assertNotIn('; args=()', record.args[1])
 
-        # assert it also works when there's no args to begin with
-        sql = u"""SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC"""
+    def test_filter_removes_args_trivial(self):
         logging_filter = ReadableSqlFilter()
-        record = type('mock_record', (object, ), {
-            'sql': sql,
-            'msg': u'(yolo) {0}'.format(sql),
-        })
+        original_sql = 'SELECT ... FROM "tx_lobbying_expensedetailreport" GROUP BY "tx_lobbying_expensedetailreport"."year", "tx_lobbying_expensedetailreport"."type" ORDER BY "tx_lobbying_expensedetailreport"."year" ASC'
+        record = mock.MagicMock(args=(1.0, original_sql, ()))
         self.assertTrue(logging_filter.filter(record))
         self.assertNotIn('; args=()', record.msg)
 
