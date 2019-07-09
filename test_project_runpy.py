@@ -144,23 +144,30 @@ class HeidiReadableSqlFilter(TestCase):
         self.assertTrue(logging_filter.filter(record))
         self.assertEqual('foo', record.args[1])
 
+    def test_filter_params_is_optional(self):
+        logging_filter = ReadableSqlFilter()
+        record = mock.MagicMock(args=())
+        record = mock.MagicMock(args=(1.0, 'foo'))
+        self.assertTrue(logging_filter.filter(record))
+        self.assertEqual('foo', record.args[1])
+
     def test_filter_formats_select_from(self):
         logging_filter = ReadableSqlFilter()
-        record = mock.MagicMock(args=(1.0, '(yolo) SELECT foo FROM moo', ()))
+        record = mock.MagicMock(args=(1.0, '(yolo) SELECT foo FROM moo'))
         self.assertTrue(logging_filter.filter(record))
         self.assertIn('SELECT...FROM moo', record.args[1])
 
     def test_filter_formats_select_from_long(self):
         logging_filter = ReadableSqlFilter()
         original_sql = '(yolo) SELECT {0} FROM moo'.format(VERY_LONG_STRING)
-        record = mock.MagicMock(args=(1.0, original_sql, ()))
+        record = mock.MagicMock(args=(1.0, original_sql))
         self.assertTrue(logging_filter.filter(record))
         self.assertIn('SELECT...FROM moo', record.args[1])
 
     def test_filter_formats_ignores_select_without_from(self):
         logging_filter = ReadableSqlFilter()
         original_sql = '(yolo) SELECT {0} moo'.format(VERY_LONG_STRING)
-        record = mock.MagicMock(args=(1.0, original_sql, ()))
+        record = mock.MagicMock(args=(1.0, original_sql))
         self.assertTrue(logging_filter.filter(record))
         self.assertEqual(original_sql, record.args[1])
 

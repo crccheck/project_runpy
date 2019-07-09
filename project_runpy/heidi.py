@@ -112,7 +112,7 @@ class ReadableSqlFilter(logging.Filter):
 
     def filter(self, record):
         # https://github.com/django/django/blob/febe136d4c3310ec8901abecca3ea5ba2be3952c/django/db/backends/utils.py#L106-L131
-        duration, sql, params = record.args
+        duration, sql, *__ = record.args
         if 'SELECT' not in sql[:28]:
             # WISHLIST what's the most performant way to see if 'SELECT' was
             # used?
