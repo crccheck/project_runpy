@@ -122,15 +122,13 @@ class TestTimEnv(TestCase):
 
 
 class HeidiColorizingStreamHandler(TestCase):
-    def test_it_works(self):
-        # assert can add handler without an exception getting raised
+    def test_it_can_be_added_to_logger(self):
         logger = logging.getLogger('test')
         logger.addHandler(ColorizingStreamHandler())
 
 
 class HeidiReadableSqlFilter(TestCase):
-    def test_it_works(self):
-        # assert can add filter without an exception getting raised
+    def test_it_can_be_added_to_logger(self):
         logger = logging.getLogger('test')
         logger.addFilter(ReadableSqlFilter())
 
