@@ -144,6 +144,11 @@ class HeidiReadableSqlFilter(TestCase):
         self.assertTrue(logging_filter.filter(record))
         self.assertEqual('foo', record.args[1])
 
+    def test_filter_runs_when_no_sql_exists(self):
+        logging_filter = ReadableSqlFilter()
+        record = mock.MagicMock(args=(0.07724404335021973, None, ()))
+        self.assertTrue(logging_filter.filter(record))
+
     def test_filter_params_is_optional(self):
         logging_filter = ReadableSqlFilter()
         record = mock.MagicMock(args=())
