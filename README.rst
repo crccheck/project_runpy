@@ -1,8 +1,8 @@
 project_runpy
 =============
 
-.. image:: https://travis-ci.org/crccheck/project_runpy.svg
-    :target: https://travis-ci.org/crccheck/project_runpy
+.. image:: https://github.com/crccheck/project_runpy/actions/workflows/ci.yaml/badge.svg?branch=master
+    :target: https://github.com/crccheck/project_runpy/actions/workflows/ci.yaml
 
 Generic helpers I wish existed or am constantly copying into my Python projects.
 
