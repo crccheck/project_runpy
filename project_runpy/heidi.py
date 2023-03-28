@@ -3,7 +3,7 @@ Heidi: Helpers related to visuals.
 """
 import logging
 
-__all__ = ['ColorizingStreamHandler', 'ReadableSqlFilter']
+__all__ = ["ColorizingStreamHandler", "ReadableSqlFilter"]
 
 
 # Copyright (C) 2010-2012 Vinay Sajip. All rights reserved. Licensed under the new BSD license.
@@ -11,30 +11,30 @@ __all__ = ['ColorizingStreamHandler', 'ReadableSqlFilter']
 class ColorizingStreamHandler(logging.StreamHandler):
     # color names to indices
     color_map = {
-        'black': 0,
-        'red': 1,
-        'green': 2,
-        'yellow': 3,
-        'blue': 4,
-        'magenta': 5,
-        'cyan': 6,
-        'white': 7,
+        "black": 0,
+        "red": 1,
+        "green": 2,
+        "yellow": 3,
+        "blue": 4,
+        "magenta": 5,
+        "cyan": 6,
+        "white": 7,
     }
 
     # levels to (background, foreground, bold/intense)
     level_map = {
-        logging.DEBUG: (None, 'blue', False),
-        logging.INFO: (None, 'white', False),
-        logging.WARNING: (None, 'yellow', False),
-        logging.ERROR: (None, 'red', False),
-        logging.CRITICAL: ('red', 'white', True),
+        logging.DEBUG: (None, "blue", False),
+        logging.INFO: (None, "white", False),
+        logging.WARNING: (None, "yellow", False),
+        logging.ERROR: (None, "red", False),
+        logging.CRITICAL: ("red", "white", True),
     }
-    csi = '\x1b['
-    reset = '\x1b[0m'
+    csi = "\x1b["
+    reset = "\x1b[0m"
 
     @property
     def is_tty(self):
-        isatty = getattr(self.stream, 'isatty', None)
+        isatty = getattr(self.stream, "isatty", None)
         return isatty and isatty()
 
     def emit(self, record):
@@ -45,7 +45,7 @@ class ColorizingStreamHandler(logging.StreamHandler):
                 stream.write(message)
             else:
                 self.output_colorized(message)
-            stream.write(getattr(self, 'terminator', '\n'))
+            stream.write(getattr(self, "terminator", "\n"))
             self.flush()
         except (KeyboardInterrupt, SystemExit):
             raise
@@ -64,24 +64,26 @@ class ColorizingStreamHandler(logging.StreamHandler):
             if fg in self.color_map:
                 params.append(str(self.color_map[fg] + 30))
             if bold:
-                params.append('1')
+                params.append("1")
             if params:
-                message = ''.join((self.csi, ';'.join(params),
-                                   'm', message, self.reset))
+                message = "".join(
+                    (self.csi, ";".join(params), "m", message, self.reset)
+                )
         return message
 
     def format(self, record):
         message = logging.StreamHandler.format(self, record)
         if self.is_tty:
             # Don't colorize any traceback
-            parts = message.split('\n', 1)
+            parts = message.split("\n", 1)
             parts[0] = self.colorize(parts[0], record)
-            message = '\n'.join(parts)
+            message = "\n".join(parts)
         return message
 
 
 # LOGGING FILTERS
 #################
+
 
 class ReadableSqlFilter(logging.Filter):
     """
@@ -113,19 +115,19 @@ class ReadableSqlFilter(logging.Filter):
     def filter(self, record):
         # https://github.com/django/django/blob/febe136d4c3310ec8901abecca3ea5ba2be3952c/django/db/backends/utils.py#L106-L131
         duration, sql, *__ = record.args
-        if not sql or 'SELECT' not in sql[:28]:
+        if not sql or "SELECT" not in sql[:28]:
             # WISHLIST what's the most performant way to see if 'SELECT' was
             # used?
             return super().filter(record)
 
-        begin = sql.index('SELECT')
+        begin = sql.index("SELECT")
         try:
-            end = sql.index('FROM', begin + 6)
+            end = sql.index("FROM", begin + 6)
         except ValueError:  # not all SELECT statements also have a FROM
             return super().filter(record)
 
-        sql = '{0}...{1}'.format(sql[:begin + 6], sql[end:])
+        sql = "{0}...{1}".format(sql[: begin + 6], sql[end:])
         # Drop "; args=%s" to shorten logging output
-        record.msg = '(%.3f) %s'
+        record.msg = "(%.3f) %s"
         record.args = (duration, sql)
         return super().filter(record)
