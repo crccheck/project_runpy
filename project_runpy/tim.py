@@ -4,21 +4,26 @@ Tim: Helpers related to functionality.
 import os
 
 
-__all__ = ['ImproperlyConfigured', 'env', ]
+__all__ = [
+    "ImproperlyConfigured",
+    "env",
+]
 
 
 class ImproperlyConfigured(Exception):
     """ForgotPantsException"""
+
     pass
 
 
 class _Env(dict):
     """A wrapper around os.environ that supports environments and `Boolean`."""
+
     def __init__(self):
         self.update(os.environ.copy())
 
     def parse_bool(self, value):
-        return str(value).lower() not in ('false', '0', 'f')
+        return str(value).lower() not in ("false", "0", "f")
 
     def get(self, key, default=None, type_func=None, **defaults):
         """
@@ -38,12 +43,12 @@ class _Env(dict):
             env.get('DEBUG', FALSE, type_func=bool, TEST=False)  # combine it
 
         """
-        environment = os.environ.get('ENVIRONMENT')
+        environment = os.environ.get("ENVIRONMENT")
         default = defaults.get(environment, default)
         value = os.environ.get(key, default)
         if value is None and type_func is None:
             # return early to prevent returning 'None'
-            return ''
+            return ""
         if type_func is None:
             # guess the type_func
             type_func = str if default is None else default.__class__
@@ -65,9 +70,10 @@ class _Env(dict):
         """
         # yeah, I could check the inputs and do stuff, but I feel like wrapping.
         result = self.get(key, default, *args, **kwargs)
-        if result == '':
+        if result == "":
             raise ImproperlyConfigured(
-                    'Environment variable not found: {0}'.format(key))
+                "Environment variable not found: {0}".format(key)
+            )
         return result
 
 
