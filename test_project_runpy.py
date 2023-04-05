@@ -176,6 +176,25 @@ class HeidiReadableSqlFilter(TestCase):
         self.assertTrue(logging_filter.filter(record))
         self.assertEqual(original_sql, record.args[1])
 
+    def test_filter_collapses_multiline_sql(self):
+        long_sql = """
+            (0.002)
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None
+            """
+        logging_filter = ReadableSqlFilter()
+        record = mock.MagicMock(args=(1.0, long_sql))
+        self.assertIn("\n", record.args[1])
+
+        self.assertTrue(logging_filter.filter(record))
+
+        self.assertNotIn("\n", record.args[1])
+
 
 if __name__ == "__main__":
     unittest.main()
