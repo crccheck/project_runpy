@@ -6,6 +6,7 @@ import hashlib
 
 __all__ = [
     "ColorizingStreamHandler",
+    "ColorizingLevelStreamHandler",
     "ColorizingNameStreamHandler",
     "ReadableSqlFilter",
 ]
@@ -84,6 +85,10 @@ class ColorizingStreamHandler(logging.StreamHandler):
             parts[0] = self.colorize(parts[0], record)
             message = "\n".join(parts)
         return message
+
+
+class ColorizingLevelStreamHandler(ColorizingStreamHandler):
+    pass
 
 
 class ColorizingNameStreamHandler(ColorizingStreamHandler):
