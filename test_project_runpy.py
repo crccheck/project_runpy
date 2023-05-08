@@ -125,6 +125,14 @@ class HeidiColorizingStreamHandler(TestCase):
     def test_it_can_be_added_to_logger(self):
         logger = logging.getLogger("test")
         logger.addHandler(ColorizingStreamHandler())
+        with self.assertLogs(logger, logging.CRITICAL):
+            logger.critical("hello")
+
+    def test_it_handles_unicode_loggers(self):
+        logger = logging.getLogger("¡tést!")
+        logger.addHandler(ColorizingStreamHandler())
+        with self.assertLogs(logger, logging.CRITICAL):
+            logger.critical("héllø")
 
 
 class HeidiReadableSqlFilter(TestCase):

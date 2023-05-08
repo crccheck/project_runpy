@@ -2,8 +2,14 @@
 Heidi: Helpers related to visuals.
 """
 import logging
+import hashlib
 
-__all__ = ["ColorizingStreamHandler", "ReadableSqlFilter"]
+__all__ = [
+    "ColorizingStreamHandler",
+    "ColorizingLevelStreamHandler",
+    "ColorizingNameStreamHandler",
+    "ReadableSqlFilter",
+]
 
 
 # Copyright (C) 2010-2012 Vinay Sajip. All rights reserved. Licensed under the new BSD license.
@@ -55,7 +61,7 @@ class ColorizingStreamHandler(logging.StreamHandler):
     def output_colorized(self, message):
         self.stream.write(message)
 
-    def colorize(self, message, record):
+    def colorize(self, message: str, record: logging.LogRecord) -> str:
         if record.levelno in self.level_map:
             bg, fg, bold = self.level_map[record.levelno]
             params = []
@@ -78,6 +84,39 @@ class ColorizingStreamHandler(logging.StreamHandler):
             parts = message.split("\n", 1)
             parts[0] = self.colorize(parts[0], record)
             message = "\n".join(parts)
+        return message
+
+
+class ColorizingLevelStreamHandler(ColorizingStreamHandler):
+    pass
+
+
+class ColorizingNameStreamHandler(ColorizingStreamHandler):
+    per_logger_colors = [
+        (None, "red", False),
+        (None, "green", False),
+        (None, "yellow", False),
+        (None, "blue", False),
+        (None, "magenta", False),
+        (None, "cyan", False),
+    ]
+
+    def colorize(self, message: str, record: logging.LogRecord) -> str:
+        bg, fg, bold = self.per_logger_colors[
+            int.from_bytes(
+                hashlib.blake2s(record.name.encode()).digest()[:8], byteorder="big"
+            )
+            % len(self.per_logger_colors)
+        ]
+        params = []
+        if bg in self.color_map:
+            params.append(str(self.color_map[bg] + 40))
+        if fg in self.color_map:
+            params.append(str(self.color_map[fg] + 30))
+        if bold:
+            params.append("1")
+        if params:
+            message = "".join((self.csi, ";".join(params), "m", message, self.reset))
         return message
 
 
