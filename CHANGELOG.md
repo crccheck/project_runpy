@@ -2,6 +2,13 @@
 
 
 
+## v1.1.2 (2023-09-08)
+
+### Fix
+
+* fix: update pkg classifiers to test new deploy key ([`56d297a`](https://github.com/crccheck/project_runpy/commit/56d297aece14902294e3bc355397e3cf3c35d39d))
+
+
 ## v1.1.1 (2023-09-08)
 
 ### Fix
