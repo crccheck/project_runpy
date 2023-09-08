@@ -2,6 +2,13 @@
 
 
 
+## v1.1.1 (2023-09-08)
+
+### Fix
+
+* fix: add ruff_cache to gitignore ([`be4a600`](https://github.com/crccheck/project_runpy/commit/be4a600f7539571b505c4878ada305d4802916bd))
+
+
 ## v1.1.0 (2023-09-08)
 
 ### Chore
