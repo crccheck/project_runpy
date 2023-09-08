@@ -5,6 +5,7 @@ project_runpy
     :target: https://github.com/crccheck/project_runpy/actions/workflows/ci.yaml
 
 Generic helpers I wish existed or am constantly copying into my Python projects.
+This is also my test project for random processes.
 
 
 ``env``

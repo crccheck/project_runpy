@@ -30,3 +30,7 @@ skip_covered = true
 
 [tool.ruff]
 line-length = 100
+
+[tool.semantic_release]
+version_variables = ["project_runpy/__init__.py:__version__"]
+build_command = "pip install flit && flit build"
