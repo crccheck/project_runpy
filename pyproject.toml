@@ -22,7 +22,7 @@ classifiers = [
 
 [tool.coverage.run]
 branch = true
-source = "project_runpy"
+source = ["project_runpy"]
 
 [tool.coverage.report]
 show_missing = true

@@ -23,6 +23,7 @@ test: ## Run test suite
 	coverage report
 
 lint: ## Run lint check
+	black --check .
 	ruff check .
 
 # Bump project_runpy.__version__
