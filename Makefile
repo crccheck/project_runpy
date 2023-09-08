@@ -22,6 +22,9 @@ test: ## Run test suite
 	coverage run test_project_runpy.py
 	coverage report
 
+lint: ## Run lint check
+	ruff check .
+
 # Bump project_runpy.__version__
 # Update CHANGELOG (TODO)
 # `git commit -am "1.0.0"`
