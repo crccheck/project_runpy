@@ -5,6 +5,7 @@
 *.pyc
 .DS_Store
 .coverage
+.ruff_cache
 .tox
 
 # setup.py generated files
