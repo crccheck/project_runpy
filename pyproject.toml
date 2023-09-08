@@ -19,3 +19,11 @@ classifiers = [
   "Programming Language :: Python :: 3.7",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+
+[tool.coverage.run]
+branch = true
+source = "project_runpy"
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
